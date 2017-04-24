@@ -1,3 +1,4 @@
+CC = gcc
 FILE = dragonCurve
 
 .PHONY : all clean
@@ -6,4 +7,4 @@ all :
 	../output/$(FILE)
 
 clean :
-	rm ./$(FILE)
+	rm ../output/$(FILE)
