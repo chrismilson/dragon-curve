@@ -119,7 +119,7 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-float angle = 0.0;
+float angle = -10.0;
 
 void draw() {
   int i;
@@ -131,13 +131,13 @@ void draw() {
   // Set the camera
   gluLookAt(
   	0.0f, 3.0f, 20.0f,
-    0.0f, 0.0f,  0.0f,
+    0.0f, 1.0f,  0.0f,
     0.0f, 1.0f,  0.0f
   );
 
   glRotatef(angle, 0, 1, 0);
 
-  glLineWidth(1);
+  glLineWidth(2);
   glColor3f(1, 1, 1);
 
   for (i = 0; i < power(2, depth); i++) {
@@ -154,6 +154,7 @@ void draw() {
 
 
 int main(int argc, char **argv) {
+  int i;
   // Initialise GLUT
   glutInit(&argc, argv);
   glutInitWindowPosition(100, 100);
@@ -175,6 +176,10 @@ int main(int argc, char **argv) {
   curve[0].start = start;
   curve[0].end = end;
   curve[0].startDepth = curve[0].endDepth = 0;
+
+  for (i = 0; i < 11; i++) {
+    descend();
+  }
 
   // register callbacks
   glutDisplayFunc(draw);
