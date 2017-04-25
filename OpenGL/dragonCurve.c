@@ -41,6 +41,8 @@ void ascend() {
 
     newCurve[i].start = start;
     newCurve[i].end = end;
+    newCurve[i].startDepth = curve[2 * i].startDepth;
+    newCurve[i].endDepth = curve[2 * i + 1].startDepth;
   }
 
   free(curve);
@@ -73,9 +75,13 @@ void descend() {
 
     newCurve[2*i].start = start;
     newCurve[2*i].end = middle;
+    newCurve[2*i].startDepth = curve[i].startDepth;
+    newCurve[2*i].endDepth = 1.0 * (rand() % 40 - 20) / 50;
 
     newCurve[2*i + 1].start = end;
     newCurve[2*i + 1].end = middle;
+    newCurve[2*i + 1].startDepth = curve[i].endDepth;
+    newCurve[2*i + 1].endDepth = newCurve[2*i].endDepth;
   }
 
   free(curve);
@@ -113,6 +119,8 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+float angle = 0.0;
+
 void draw() {
   int i;
   // Clear Color and Depth Buffers
@@ -122,23 +130,28 @@ void draw() {
   glLoadIdentity();
   // Set the camera
   gluLookAt(
-  	0.0f, 0.0f, 10.0f,
+  	0.0f, 3.0f, 20.0f,
     0.0f, 0.0f,  0.0f,
     0.0f, 1.0f,  0.0f
   );
+
+  glRotatef(angle, 0, 1, 0);
 
   glLineWidth(1);
   glColor3f(1, 1, 1);
 
   for (i = 0; i < power(2, depth); i++) {
     glBegin(GL_LINES);
-      glVertex3f(curve[i].start.x, curve[i].start.y, -5);
-      glVertex3f(curve[i].end.x, curve[i].end.y, -5);
+      glVertex3f(curve[i].start.x, curve[i].start.y, curve[i].startDepth);
+      glVertex3f(curve[i].end.x, curve[i].end.y, curve[i].endDepth);
     glEnd();
   }
 
+  angle += 0.1f;
+
   glutSwapBuffers();
 }
+
 
 int main(int argc, char **argv) {
   // Initialise GLUT
@@ -161,11 +174,13 @@ int main(int argc, char **argv) {
   curve = (Line *) malloc(sizeof(Line) * power(2, depth));
   curve[0].start = start;
   curve[0].end = end;
+  curve[0].startDepth = curve[0].endDepth = 0;
 
   // register callbacks
   glutDisplayFunc(draw);
   glutReshapeFunc(changeSize);
   glutKeyboardFunc(processKey);
+  glutIdleFunc(draw);
 
   // Start
   glutMainLoop();

@@ -22,6 +22,8 @@ struct vector {
 typedef struct Line{
   struct vector start;
   struct vector end;
+  float startDepth;
+  float endDepth;
 } Line;
 
 int depth;
